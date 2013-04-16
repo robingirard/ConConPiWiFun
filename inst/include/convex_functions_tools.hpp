@@ -1,4 +1,24 @@
-#include<cpfunction.h>
+/*
+ * convex_functions_tools.hpp
+ *
+ *  Created on: 16 avr. 2013
+ *      Author: robin
+ */
+
+#ifndef CONVEX_FUNCTIONS_TOOLS_HPP_
+#define CONVEX_FUNCTIONS_TOOLS_HPP_
+
+bool isincreasing(Rcpp::NumericVector arg){
+	int length=arg.size();
+	  bool res=true;
+	   for (int n=1; n<(length); n++)
+		  if (arg[n]<=arg[n-1]){
+			  res=false;
+			  break;
+		  }
+	  return res;
+};
+
 
 
 // here polynom is 1/2 ax^2+bx+c
@@ -18,13 +38,18 @@ double getSlope(pair<double,double> Coefficients,double val){
 				 return(numeric_limits<double>::infinity());
 			 }
 		 }else{
-			 return(Coefficients.first*val+Coefficients.second);
+       if (Coefficients.first==0){
+         return(Coefficients.second);
+       }
+       else{
+			   return(Coefficients.first*val+Coefficients.second);
+       }
 		 }
 	 }
 };
 
 double getVal(pair<double,double> Coefficients,double val){
-// returns the val at val given Coefficients at 0 and 1
+// returns the val at val given Coefficients a and b
 	 if (val==-numeric_limits<double>::infinity()&&Coefficients.first!=0){
 		 if (Coefficients.first<0){
 			 return(numeric_limits<double>::infinity());
@@ -71,45 +96,6 @@ pair<double,double> Slopes2Coeffs(double Slope0,double Slope1){
   return(res);
 }
 
-cpqfunction Sumq(cpqfunction const & cpqfunction1,cpqfunction const & cpqfunction2){
-   cpqfunction tmp1=cpqfunction1,tmp2=cpqfunction2;
-   		if (cpqfunction2.Breakpoints_.size()>cpqfunction1.Breakpoints_.size()){
-   			tmp2.Sumf(tmp1);
-   			return(tmp2);
-   		}else{
-   			tmp1.Sumf(tmp2);
-   			return(tmp1);
-   		}
-};
 
 
-
-RCPP_MODULE(mod_cpqfunction){
-  using namespace Rcpp;
-  
-	class_<cpqfunction>( "cpqfunction" )
-	//constructors
-	.constructor()
-//	.constructor<double,double>()
-	//.constructor<double,double,double>()
-	//.constructor<double,double,double,double>()
-	.constructor<Rcpp::NumericVector,Rcpp::NumericVector,Rcpp::NumericVector,double>()
-
-	.method("clone", &cpqfunction::clone)
-	//.field_readonly( "Breakpoints_", &cpqfunction::get_BreakPoints_ )
-	.field( "FirstBreakVal_", &cpqfunction::FirstBreakVal_ )
-
-	//methods
-	.method("get_BreakPoints_",&cpqfunction::get_BreakPoints)
-	.method("Argmin",&cpqfunction::Argmin)
-	.method("Squeeze",&cpqfunction::Squeeze)
-	.method("Swap",&cpqfunction::Swap)
-	.method("Etoile",&cpqfunction::Etoile)
-
- // .finalizer( &finalizer_of_cplfunction)  
-	;
-  
-  function("Sumq",&Sumq,"This function allows to sum two functions of class Rcpp_cpqfunction. It does not modify the imput functions.")
-  ;
-
-}
+#endif /* CONVEX_FUNCTIONS_TOOLS_HPP_ */

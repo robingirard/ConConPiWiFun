@@ -206,7 +206,7 @@ class  cpqfunction {
     void Etoile(){
 	    int compteur=0;
 	    double tmpslope;
-	    pair<double,double>  pastCoefficients, Coef;
+	    std::pair<double,double>  pastCoefficients, Coef;
 	    bool IsBreak ; // true if current point comes from a slope discontinuity at a break point
                      // true if  there is a slope discontinuity at current breakpoint?
 
@@ -214,132 +214,135 @@ class  cpqfunction {
 	    Breakpoints_.clear();
 
 	    map<double,pair<double,double> >::iterator it=tmp.Breakpoints_.begin();
-      map<double,pair<double,double> >::iterator itobj=Breakpoints_.begin();
+	    map<double,pair<double,double> >::iterator itobj=Breakpoints_.begin();
 	    double firstbreak=it->first;
 	    map<double,pair<double,double> >::reverse_iterator rit=tmp.Breakpoints_.rbegin();
-	    //rit=tmp.Breakpoints_.rbegin() ;
 	    double lastbreak=rit->first;
 
 	    int NbCoefficients=2*tmp.Breakpoints_.size();
 
-      //cout << NbCoefficients << endl ;
+	    //cout << NbCoefficients << endl ;
 
-      //si le premier breakpoint vaut -Inf
-	    if ((firstbreak==-numeric_limits<double>::infinity())){
+	    //si le premier breakpoint vaut -Inf
+	    if ((firstbreak==-numeric_limits<double>::infinity()))
+	    {
 		    IsBreak=false;
-        NbCoefficients--;
-	    }else{
+		    NbCoefficients--;
+	    }else
+	    {
 		    IsBreak=true;
 		    //pastCoefficients=pair<double,double>(-numeric_limits<double>::infinity(),0);
-        pastCoefficients=pair<double,double>(numeric_limits<double>::infinity(),0);
+		    pastCoefficients=pair<double,double>(numeric_limits<double>::infinity(),0);
 	    }
 
-      //si le dernier breakpoint vaut +Inf
-	    if (lastbreak==numeric_limits<double>::infinity()){
+	    //si le dernier breakpoint vaut +Inf
+	    if (lastbreak==numeric_limits<double>::infinity())
+	    {
 		    //bool IsBreakLast=false;
-        NbCoefficients--;
+	    	NbCoefficients--;
 	    }/*else{bool IsBreakLast=true;}*/
 
 	    it=tmp.Breakpoints_.begin();
 
-	    pair<double,double> * newCoefficients;
-      newCoefficients = new pair<double,double> [NbCoefficients-1];
-
-      vector<double> newBreak(NbCoefficients);
-      //newBreak = new vector<double> (NbCoefficients);
-
-	    bool remove [NbCoefficients];
-
-      //cout << NbCoefficients << endl ;
+	    vector<pair<double,double> > newCoefficients(NbCoefficients-1);
+	    vector<double> newBreak(NbCoefficients);
+	    vector<bool> remove(NbCoefficients);
+	    //cout << NbCoefficients << endl ;
 
 	    while(compteur != NbCoefficients) {
         //si IsBreak
-		    if (IsBreak){
-			    tmpslope=getSlope(pastCoefficients,it->first);
-          cout << "it->fist : " << it->first << endl;
-          //cout << "getslope : " << getSlope(it->second,it->first) <<endl;
-		      if (tmpslope!=getSlope(it->second,it->first)){
+		    if (IsBreak)
+		    {
+			  tmpslope=getSlope(pastCoefficients,it->first);
+			  //Rcout << "it->fist : " << it->first << endl;
+			  //cout << "getslope : " << getSlope(it->second,it->first) <<endl;
+		      if (tmpslope!=getSlope(it->second,it->first))
+		      {
 			      remove[compteur]=false;
 			      newBreak[compteur]=tmpslope;
-            cout << "newBreak1 : " << newBreak[compteur] <<endl;
-            cout << "newCoef   : zéro et " << it->first << endl ;
+			     // Rcout << "newBreak1 : " << newBreak[compteur] <<endl;
+			     // Rcout << "newCoef   : zéro et " << it->first << endl ;
 			      //newCoefficients[compteur]=pair<double,double>(it->first,0);
 			      newCoefficients[compteur]=pair<double,double>(0,it->first);
-		      }else{
+		      }else
+		      {
 			      remove[compteur]=true;
 		      }
 			    IsBreak=false;
-		    }else{
+		    }else
+		    {
 			    pastCoefficients=pair<double,double>(it->second.first,it->second.second);
-          cout << "pastCoefficients.first  : " << pastCoefficients.first  << endl;
-          cout << "pastCoefficients.second : " << pastCoefficients.second  << endl;
+			   // Rcout << "pastCoefficients.first  : " << pastCoefficients.first  << endl;
+			    //Rcout << "pastCoefficients.second : " << pastCoefficients.second  << endl;
 			    //if (pastCoefficients.second==0)
-          // cas lineaire
-          if (pastCoefficients.first==0){
+			    // cas lineaire
+			    if (pastCoefficients.first==0)
+			    {
 				    //Linear polynom first empty
 				    remove[compteur]=true;
-          //cas quadratique
+				    //cas quadratique
 			    }else{
 				    remove[compteur]=false;
 				    // f_i'(x_i)
 				    newBreak[compteur]=getSlope(it->second,it->first);
-            cout << "newBreak2 : " << newBreak[compteur] <<endl;
+				    //Rcout << "newBreak2 : " << newBreak[compteur] <<endl;
 				    //newCoefficients[compteur]=pair<double,double>(-pastCoefficients.first/pastCoefficients.second,1/pastCoefficients.second);
-            if (pastCoefficients.first==numeric_limits<double>::infinity()&&pastCoefficients.second==numeric_limits<double>::infinity()){
-              newCoefficients[compteur]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
-            }else{
-              newCoefficients[compteur]=pair<double,double>(1/pastCoefficients.first,-pastCoefficients.second/pastCoefficients.first);
-            }
-            cout << "newCoef a : " << newCoefficients[compteur].first << endl ;
-            cout << "newCoef b : " << newCoefficients[compteur].second << endl ;
-          }
+					if (pastCoefficients.first==numeric_limits<double>::infinity()&&pastCoefficients.second==numeric_limits<double>::infinity()){
+					  newCoefficients[compteur]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
+					}else{
+					  newCoefficients[compteur]=pair<double,double>(1/pastCoefficients.first,-pastCoefficients.second/pastCoefficients.first);
+					}
+					//Rcout << "newCoef a : " << newCoefficients[compteur].first << endl ;
+					//Rcout << "newCoef b : " << newCoefficients[compteur].second << endl ;
+			    }
 			    IsBreak=true;
 			    ++it;
 		    }
 	   	  compteur++;
-        cout << "compteur : " << compteur << endl ;
+	   	  //Rcout << "compteur : " << compteur << endl ;
 	    }
       //cout << "BP.size : " << newBreak.size() << endl ;
 
-	    if (NbCoefficients==0){
-      cout << "PASSSAGE" << endl;
-		  Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
-		  FirstBreakVal_= tmp.FirstBreakVal_;
+	    if (NbCoefficients==0)
+	    {
+	    	Rcout << "PASSSAGE" << endl;
+	    	Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
+	    	FirstBreakVal_= tmp.FirstBreakVal_;
 	    }else{
-		    for (int i=0; i<NbCoefficients; i++){
-			    if (!remove[i]){
-            cout << i << endl;
-				    Breakpoints_[newBreak[i]]=newCoefficients[i];
-            cout << "newBreak : " << newBreak[i] << endl;
-            cout << "newcoef1 : " << newCoefficients[i].first << endl;
-            cout << "newcoef2 : " << newCoefficients[i].second << endl;
+		    for (int i=0; i<NbCoefficients; i++)
+		    {
+			    if (!remove[i])
+			    {
+					Rcout << i << endl;
+					Breakpoints_[newBreak[i]]=newCoefficients[i];
+					Rcout << "newBreak : " << newBreak[i] << endl;
+					Rcout << "newcoef1 : " << newCoefficients[i].first << endl;
+					Rcout << "newcoef2 : " << newCoefficients[i].second << endl;
 			    }
 		    }
 
-        cout << "Breakpoints_.size() : " << Breakpoints_.size() << endl;
-		    //Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
+			Rcout << "Breakpoints_.size() : " << Breakpoints_.size() << endl;
+				//Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 
-        it=tmp.Breakpoints_.begin();
-        itobj=Breakpoints_.begin();
-        if (itobj->first==-numeric_limits<double>::infinity()){itobj++;}
-        if (it->first==-numeric_limits<double>::infinity()){it++;}
+			it=tmp.Breakpoints_.begin();
+			itobj=Breakpoints_.begin();
+			if (itobj->first==-numeric_limits<double>::infinity()){itobj++;}
+			if (it->first==-numeric_limits<double>::infinity()){it++;}
 
+			Coef=pair<double,double>(itobj->second.first,itobj->second.second);
 
+			double c_init=tmp.FirstBreakVal_-getVal(it->second,it->first);
+			FirstBreakVal_= getVal(Coef,itobj->first)-c_init+(it->second.second)*(it->second.second)/(2*it->second.first);
 
-        Coef=pair<double,double>(itobj->second.first,itobj->second.second);
-
-        double c_init=tmp.FirstBreakVal_-getVal(it->second,it->first);
-        FirstBreakVal_= getVal(Coef,itobj->first)-c_init+(it->second.second)*(it->second.second)/(2*it->second.first);
-
-        cout << "firstbreakval " << itobj->first << endl;
-        cout << "c_init : " << c_init << endl;
-        cout << "Coef.first  : " << Coef.first  << endl;
-        cout << "Coef.second : " << Coef.second  << endl;
-        cout << "Coef.first  : " << it->second.first  << endl;
-        cout << "Coef.second : " << it->second.second  << endl;
+			Rcout << "firstbreakval " << itobj->first << endl;
+			Rcout << "c_init : " << c_init << endl;
+			Rcout << "Coef.first  : " << Coef.first  << endl;
+			Rcout << "Coef.second : " << Coef.second  << endl;
+			Rcout << "Coef.first  : " << it->second.first  << endl;
+			Rcout << "Coef.second : " << it->second.second  << endl;
 	    }
 
-	   	delete [] newCoefficients;
+	   	//delete [] newCoefficients;
 	   	//delete [] newBreak;
 	    //return(*this);*/
     }

@@ -11,6 +11,8 @@
 #include <math.h>
 #include <limits>
 #include <Rcpp.h>
+#include <vector>
+#include <map>
 
 using namespace std;
 using namespace Rcpp;

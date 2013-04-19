@@ -1,33 +1,144 @@
+#TODO : write more test for other functions
+library(ConConPiWiFun)
 
-### first test
-#Value of f at first non infinite break:  4
-F1=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),4)
-F2=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),4)
-F3=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),8);
-F4=Sum(F1,F2);
-eq(F3,F4)
+#### Testing eq
+  cat("tests for eq: \n")
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  cat("\t\t test 1 : ")
+  if (F1$eq(F2)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    print(F1)
+    print(F2)
+  }
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),2)
+  cat("\t\t test 2 : ")
+  if (F1$eq(F2)==FALSE){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    print(F1)
+    print(F2)
+  }
+  
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 1),4)
+  cat("\t\t test 3 : ")
+  if (F1$eq(F2)==FALSE){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    print(F1)
+    print(F2)
+  }
 
-### second test
-#Value of f at first non infinite break:  4
-F1=new("Rcpp_cpqfunction",c(0,1),c(1,2),c(-2, 0, 2),4)
-F2=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),4)
-F3=new("Rcpp_cpqfunction",c(0,1),c(2,3),c(-2, 0, 2),8);
-F4=Sum(F1,F2);
-eq(F3,F4)
+#### Testing evalf
+cat("tests for evalf: \n")
+  ### test 1
+  cat("\t\t test 1 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  trueval=2;
+  if (F1$evalf(0)==trueval){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat(F1,": "); print(F1$evalf(0));
+    cat(", should be ",trueval, ". \n")
+  }
+  ### test 1
+  cat("\t\t test 2 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0,1),c(1,2),c(-2, 0, 2),4)
+  trueval=2;
+  if (F1$evalf(0)==trueval){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat(F1,": "); print(F1$evalf(0));
+    cat(", should be ",trueval, ". \n")
+  }
 
-### troisième test
-#Value of f at first non infinite break:  4
-F1=new("Rcpp_cpqfunction",c(0,1),c(0,1),c(-2, 0, 2),4)
-F2=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),4)
-F3=new("Rcpp_cpqfunction",c(0,1),c(1,2),c(-2, 0, 2),8);
-F4=Sum(F1,F2);
-eq(F3,F4) #not implemented
 
-### troisième test
-#Value of f at first non infinite break:  4
-F1=new("Rcpp_cpqfunction",c(0,1),c(0,1),c(-2, 0, 2),4)
-F2=new("Rcpp_cpqfunction",c(0),c(1),c(-2, 2),4)
-F3=new("Rcpp_cpqfunction",c(0,1),c(1,2),c(-2, 0, 2),8);
-F4=Sum(F1,F2);
-eq(F3,F4)
+#### Testing the Sum
+cat("tests for the sum: \n")
+  ### test 1
+  cat("\t\t test 1 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F3=new(cpqfunction,c(0),c(2),c(-2, 2),8);
+  F4=Sumq(F1,F2);
+  if (F3$eq(F4)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat("F3",": \n"); print(F3);
+    cat("F4",": \n"); print(F4);
+  }
 
+  ### test 2
+  cat("\t\t test 2 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-3, 1),9)
+  F3=new(cpqfunction,c(0),c(2),c(-2, 1),10.5);
+  F4=Sumq(F1,F2);
+  if (F3$eq(F4)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat("F3",": \n"); print(F3);
+    cat("F4",": \n"); print(F4);
+  }
+
+
+  ### test 3
+  cat("\t\t test 3 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0,1),c(1,2),c(-2, 0, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F3=new(cpqfunction,c(0,1),c(2,3),c(-2, 0, 2),8);
+  F4=Sumq(F1,F2);
+  if (F3$eq(F4)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat("F3",": \n"); print(F3);
+    cat("F4",": \n"); print(F4);
+  }
+
+  ### test 4
+  cat("\t\t test 4 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0,1),c(0,1),c(-2, 0, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F3=new(cpqfunction,c(0,1),c(1,2),c(-2, 0, 2),8);
+  F4=Sumq(F1,F2);
+  if (F3$eq(F4)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat("F3",": \n"); print(F3);
+    cat("F4",": \n"); print(F4);
+  }
+
+  ### test 5
+  cat("\t\t test 5 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0,1),c(0,1),c(-2, 0, 2),4)
+  F2=new(cpqfunction,c(0),c(1),c(-2, 2),4)
+  F3=new(cpqfunction,c(0,1),c(1,2),c(-2, 0, 2),8);
+  F4=Sumq(F1,F2);
+  if (F3$eq(F4)){
+    cat("OK",".\n",sep="")
+  }else{
+    cat("ERROR.\n",sep="")
+    cat("F3",": \n"); print(F3);
+    cat("F4",": \n"); print(F4);
+  }
+
+  gc()

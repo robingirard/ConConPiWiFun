@@ -146,19 +146,42 @@ class  cpqfunction {
     return *this;
    }
 
+    double evalf(double x)
+    {
+    	map<double, pair<double,double> >::iterator it = Breakpoints_.begin();
+    	map<double, pair<double,double> >::reverse_iterator rev_it = Breakpoints_.rbegin();
+    	if (it->first>x || rev_it->first<x)
+    	{
+    		return numeric_limits<double>::infinity();
+    	}
+    	else
+    	{
+    		  std::map<double, pair<double,double> >::const_reverse_iterator
+    		    last_element_not_greater_than(Breakpoints_.upper_bound(x));
+
+    		  if (Breakpoints_.rend() == last_element_not_greater_than) {
+    		    return -1;
+    		  }
+    		double diff=FirstBreakVal_-getVal(Breakpoints_.begin()->second,Breakpoints_.begin()->first);
+    		return getVal(last_element_not_greater_than->second,x)+diff;
+    	}
+    };
     void AddSimple(double const & breakpoint,pair<double,double> const & left,pair<double,double> const & right,double const & val){
      map<double, pair<double,double> >::iterator i = Breakpoints_.begin();
-     FirstBreakVal_=FirstBreakVal_+val;
-	   if ((left.first==right.first)&&(left.second==right.second)){
+
+	   if ((left.first==right.first)&&(left.second==right.second))
+	   {//in this case the break is not a real break...
+		   FirstBreakVal_=FirstBreakVal_+getVal(left,i->first)-getVal(left,breakpoint)+val;
 		   while(i != Breakpoints_.end()) {
 			   (*i).second.first=i->second.first+left.first;
 			   (*i).second.second=i->second.second+left.second;
 		   	   ++i;
 		   }
-	   	   FirstBreakVal_=FirstBreakVal_+val;
+
 	   }else{
            if (breakpoint<=(*Breakpoints_.begin()).first){
                //BreakPoint is out of the domain, on the left
+        	   FirstBreakVal_=FirstBreakVal_+getVal(right,i->first)-getVal(right,breakpoint)+val;
     		   while(i != Breakpoints_.end()) {
     			   (*i).second.first=i->second.first+right.first;
     			   (*i).second.second=i->second.second+right.second;
@@ -166,6 +189,7 @@ class  cpqfunction {
     		   }
            }
            else{
+        	   FirstBreakVal_=FirstBreakVal_+getVal(left,i->first)-getVal(left,breakpoint)+val;
                if (breakpoint>=(*Breakpoints_.rbegin()).first){
           		   while(i != Breakpoints_.end()) {
         			   (*i).second.first=i->second.first+left.first;
@@ -218,39 +242,33 @@ class  cpqfunction {
 	    double firstbreak=it->first;
 	    map<double,pair<double,double> >::reverse_iterator rit=tmp.Breakpoints_.rbegin();
 	    double lastbreak=rit->first;
-
 	    int NbCoefficients=2*tmp.Breakpoints_.size();
 
-	    //cout << NbCoefficients << endl ;
-
-	    //si le premier breakpoint vaut -Inf
 	    if ((firstbreak==-numeric_limits<double>::infinity()))
-	    {
+	    {//le premier breakpoint vaut -Inf
 		    IsBreak=false;
 		    NbCoefficients--;
 	    }else
-	    {
+	    {// le premier breakpoint est diff?rent de -Inf
 		    IsBreak=true;
-		    //pastCoefficients=pair<double,double>(-numeric_limits<double>::infinity(),0);
 		    pastCoefficients=pair<double,double>(numeric_limits<double>::infinity(),0);
 	    }
 
 	    //si le dernier breakpoint vaut +Inf
 	    if (lastbreak==numeric_limits<double>::infinity())
 	    {
-		    //bool IsBreakLast=false;
 	    	NbCoefficients--;
 	    }/*else{bool IsBreakLast=true;}*/
 
 	    it=tmp.Breakpoints_.begin();
 
-	    vector<pair<double,double> > newCoefficients(NbCoefficients-1);
+	    vector<pair<double,double> > newCoefficients(NbCoefficients);
 	    vector<double> newBreak(NbCoefficients);
 	    vector<bool> remove(NbCoefficients);
 	    //cout << NbCoefficients << endl ;
 
-	    while(compteur != NbCoefficients) {
-        //si IsBreak
+	    while(compteur != NbCoefficients)
+	    {//si IsBreak
 		    if (IsBreak)
 		    {
 			  tmpslope=getSlope(pastCoefficients,it->first);
@@ -261,7 +279,7 @@ class  cpqfunction {
 			      remove[compteur]=false;
 			      newBreak[compteur]=tmpslope;
 			     // Rcout << "newBreak1 : " << newBreak[compteur] <<endl;
-			     // Rcout << "newCoef   : zéro et " << it->first << endl ;
+			     // Rcout << "newCoef   : z?ro et " << it->first << endl ;
 			      //newCoefficients[compteur]=pair<double,double>(it->first,0);
 			      newCoefficients[compteur]=pair<double,double>(0,it->first);
 		      }else
@@ -275,10 +293,10 @@ class  cpqfunction {
 			   // Rcout << "pastCoefficients.first  : " << pastCoefficients.first  << endl;
 			    //Rcout << "pastCoefficients.second : " << pastCoefficients.second  << endl;
 			    //if (pastCoefficients.second==0)
-			    // cas lineaire
+
 			    if (pastCoefficients.first==0)
-			    {
-				    //Linear polynom first empty
+			    { // cas lineaire
+				  //first empty
 				    remove[compteur]=true;
 				    //cas quadratique
 			    }else{
@@ -287,10 +305,11 @@ class  cpqfunction {
 				    newBreak[compteur]=getSlope(it->second,it->first);
 				    //Rcout << "newBreak2 : " << newBreak[compteur] <<endl;
 				    //newCoefficients[compteur]=pair<double,double>(-pastCoefficients.first/pastCoefficients.second,1/pastCoefficients.second);
-					if (pastCoefficients.first==numeric_limits<double>::infinity()&&pastCoefficients.second==numeric_limits<double>::infinity()){
-					  newCoefficients[compteur]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
+					if (pastCoefficients.first==numeric_limits<double>::infinity()&&pastCoefficients.second==numeric_limits<double>::infinity())
+					{// on est au bout
+						newCoefficients[compteur]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 					}else{
-					  newCoefficients[compteur]=pair<double,double>(1/pastCoefficients.first,-pastCoefficients.second/pastCoefficients.first);
+						newCoefficients[compteur]=pair<double,double>(1/pastCoefficients.first,-pastCoefficients.second/pastCoefficients.first);
 					}
 					//Rcout << "newCoef a : " << newCoefficients[compteur].first << endl ;
 					//Rcout << "newCoef b : " << newCoefficients[compteur].second << endl ;
@@ -305,7 +324,7 @@ class  cpqfunction {
 
 	    if (NbCoefficients==0)
 	    {
-	    	Rcout << "PASSSAGE" << endl;
+	    	//Rcout << "PASSSAGE" << endl;
 	    	Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 	    	FirstBreakVal_= tmp.FirstBreakVal_;
 	    }else{
@@ -313,15 +332,14 @@ class  cpqfunction {
 		    {
 			    if (!remove[i])
 			    {
-					Rcout << i << endl;
 					Breakpoints_[newBreak[i]]=newCoefficients[i];
-					Rcout << "newBreak : " << newBreak[i] << endl;
-					Rcout << "newcoef1 : " << newCoefficients[i].first << endl;
-					Rcout << "newcoef2 : " << newCoefficients[i].second << endl;
+					//Rcout << "newBreak : " << newBreak[i] << endl;
+					//Rcout << "newcoef1 : " << newCoefficients[i].first << endl;
+					//Rcout << "newcoef2 : " << newCoefficients[i].second << endl;
 			    }
 		    }
 
-			Rcout << "Breakpoints_.size() : " << Breakpoints_.size() << endl;
+			//Rcout << "Breakpoints_.size() : " << Breakpoints_.size() << endl;
 				//Breakpoints_[newBreak[NbCoefficients]]=pair<double,double>(numeric_limits<double>::infinity(),numeric_limits<double>::infinity());
 
 			it=tmp.Breakpoints_.begin();
@@ -334,12 +352,12 @@ class  cpqfunction {
 			double c_init=tmp.FirstBreakVal_-getVal(it->second,it->first);
 			FirstBreakVal_= getVal(Coef,itobj->first)-c_init+(it->second.second)*(it->second.second)/(2*it->second.first);
 
-			Rcout << "firstbreakval " << itobj->first << endl;
-			Rcout << "c_init : " << c_init << endl;
-			Rcout << "Coef.first  : " << Coef.first  << endl;
-			Rcout << "Coef.second : " << Coef.second  << endl;
-			Rcout << "Coef.first  : " << it->second.first  << endl;
-			Rcout << "Coef.second : " << it->second.second  << endl;
+			//Rcout << "firstbreakval " << itobj->first << endl;
+			//Rcout << "c_init : " << c_init << endl;
+			//Rcout << "Coef.first  : " << Coef.first  << endl;
+			//Rcout << "Coef.second : " << Coef.second  << endl;
+			//Rcout << "Coef.first  : " << it->second.first  << endl;
+			//Rcout << "Coef.second : " << it->second.second  << endl;
 	    }
 
 	   	//delete [] newCoefficients;
@@ -348,18 +366,26 @@ class  cpqfunction {
     }
 
     bool eq(cpqfunction  const & cpqfunction1){
-	   if (FirstBreakVal_!=cpqfunction1.FirstBreakVal_){
+	   if (FirstBreakVal_!=cpqfunction1.FirstBreakVal_)
+	   {
 		   return(false);
 	   }
-	   if (Breakpoints_.size()!=cpqfunction1.Breakpoints_.size()){
+	   if (Breakpoints_.size()!=cpqfunction1.Breakpoints_.size())
+	   {
 		   return(false);
 	   }else{
 		   map<double, pair<double,double> > mybreak=Breakpoints_;
-  		   map<double, pair<double,double> >::iterator i = Breakpoints_.begin(),i2=mybreak.begin();
-  		   while(i != Breakpoints_.end()) {
-  			   if (i->first==i2->first&&i->second.first==i2->second.first&&i->second.second==i2->second.second){
-  				 ++i;++i2;
-  			   }else{
+  		   map<double, pair<double,double> >::iterator it = Breakpoints_.begin();
+  				map<double, pair<double,double> >::const_iterator    it2=cpqfunction1.Breakpoints_.begin();
+  		   while(it != Breakpoints_.end())
+  		   {
+  			   if (	it->first==it2->first&&
+  					   it->second.first==it2->second.first&&
+  					   it->second.second==it2->second.second)
+  			   {
+  				 ++it;++it2;
+  			   }else
+  			   {
   				   return(false);
   			   }
   		   }
@@ -496,15 +522,19 @@ class  cpqfunction {
   			  }
         }else{
           //cout << tmp1.Breakpoints_.rbegin()->first;
-          FirstBreakVal_=FirstBreakVal_+tmp1.FirstBreakVal_;
-  			  map<double,pair<double,double> >::iterator it=Breakpoints_.begin();
+        	(*this).AddSimple(tmp1.Breakpoints_.begin()->first,
+        					tmp1.Breakpoints_.begin()->second,
+        					tmp1.Breakpoints_.begin()->second,
+        					tmp1.FirstBreakVal_);
+  			/*  map<double,pair<double,double> >::iterator it=Breakpoints_.begin();
+  			FirstBreakVal_=FirstBreakVal_+tmp1.FirstBreakVal_;
   			  double a,b;
   			  while (it != Breakpoints_.end()){
   				  a=it->second.first; b=it->second.second;
   				  (*it).second.first=a+tmp1.Breakpoints_.begin()->second.first;
   				  (*it).second.second=b+tmp1.Breakpoints_.begin()->second.second;
   				  ++it;
-  			  }
+  			  }*/
   		  }
       }else{
   		  double a,b;
@@ -515,7 +545,7 @@ class  cpqfunction {
   		  ++it;itplus2=it;
   		  it=tmp1.Breakpoints_.begin();
   		  //double const & breakpoint,pair<double,double> const & left,pair<double,double> const & right,double const & val
-  	    (*this).AddSimple(itplus->first,it->second,itplus->second,tmp1.FirstBreakVal_);
+  	    (*this).AddSimple(itplus->first,it->second,itplus->second,tmp1.evalf(itplus->first));
   	    ++itplus;++it;++itplus2;
   	    while (itplus2!=tmp1.Breakpoints_.end()){
   	      a=itplus->second.first-it->second.first;

@@ -22,7 +22,7 @@ RCPP_MODULE(mod_cplfunction){
 	.method("Squeeze",&cplfunction::Squeeze)
 	.method("Swap",&cplfunction::Swap)
 	.method("Etoile",&cplfunction::Etoile)
-
+	.method("eq",&cplfunction::eq)
  // .finalizer( &finalizer_of_cplfunction)
 	;
 
@@ -43,9 +43,9 @@ RCPP_MODULE(mod_cplfunction){
  // function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
 //  ;
 
-  function("Sum",&Sum,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
+  function("Suml",&Sum,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
   ;
-	function("InfConv",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
+  function("InfConv",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
 
 }
@@ -72,6 +72,8 @@ RCPP_MODULE(mod_cpqfunction){
 	.method("Squeeze",&cpqfunction::Squeeze)
 	.method("Swap",&cpqfunction::Swap)
 	.method("Etoile",&cpqfunction::Etoile)
+	.method("eq",&cpqfunction::eq)
+	.method("evalf",&cpqfunction::evalf)
 
  // .finalizer( &finalizer_of_cplfunction)
 	;

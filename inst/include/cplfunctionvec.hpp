@@ -34,18 +34,32 @@ class cplfunctionvec {
   void push_back(cplfunction func){MycplfunctionList_.push_back(func);};
 
   // serialized push
-  void SerialPush_3Breaks_Functions(Rcpp::NumericVector S1,Rcpp::NumericVector S2, Rcpp::NumericVector B0,Rcpp::NumericVector B1,Rcpp::NumericVector B2){
-  int length=S1.size();
-  Rcpp::NumericVector Slopes(2);
-  Rcpp::NumericVector BreakPoints(3);
-  for (int compteur=0; compteur<length; compteur++){
-    Slopes[0]=S1[compteur];Slopes[1]=S2[compteur];
-    BreakPoints[0]=B0[compteur];BreakPoints[1]=B1[compteur];BreakPoints[2]=B2[compteur];
-    //vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
-    MycplfunctionList_.push_back(cplfunction(Slopes,BreakPoints,0));
+  void SerialPush_1Breaks_Functions(Rcpp::NumericVector S1, Rcpp::NumericVector B1)
+  {
+	  int length=S1.size();
+	  Rcpp::NumericVector Slopes(1);
+	  Rcpp::NumericVector BreakPoints(1);
+	  for (int compteur=0; compteur<length; compteur++){
+		Slopes[0]=S1[compteur];
+		BreakPoints[0]=B1[compteur];
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		MycplfunctionList_.push_back(cplfunction(Slopes,BreakPoints,0.));
+	  }
   }
 
-  };
+  void SerialPush_2Breaks_Functions(Rcpp::NumericVector S1,Rcpp::NumericVector S2, Rcpp::NumericVector B1,Rcpp::NumericVector B2)
+  {
+	  int length=S1.size();
+	  Rcpp::NumericVector Slopes(2);
+	  Rcpp::NumericVector BreakPoints(2);
+	  for (int compteur=0; compteur<length; compteur++){
+		Slopes[0]=S1[compteur];Slopes[1]=S2[compteur];
+		BreakPoints[0]=B1[compteur];BreakPoints[1]=B2[compteur];
+		//vectorofcplfunctions_.push_back(cplfunction(Slopes,BreakPoints,0));
+		MycplfunctionList_.push_back(cplfunction(Slopes,BreakPoints,0));
+	  }
+  }
+
 
 
   //Optim problem solving
@@ -73,11 +87,10 @@ class cplfunctionvec {
     		  tmpfunc.Etoile();
     		  tmpfunc2.Squeeze(Cmoins[compteur-1],Cplus[compteur-1]);
           tmpfunc2.Etoile();
-    		  cplfunction tmpfunc3 = Sum(tmpfunc,tmpfunc2);
+    		  cplfunction tmpfunc3 = Suml(tmpfunc,tmpfunc2);
     		  tmpfunc3.Etoile();
           f.push_back(tmpfunc3);
           compteur++; ++it;
-
        }
 
        std::vector<cplfunction>::reverse_iterator itr,itf;

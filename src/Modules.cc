@@ -1,6 +1,9 @@
 #include "ConConPiWiFun.h"
 
 
+
+
+
 RCPP_MODULE(mod_cplfunction){
   using namespace Rcpp;
 
@@ -37,13 +40,14 @@ RCPP_MODULE(mod_cplfunction){
   .method("[[",&cplfunctionvec::vec_get)
   .method("[[<-",&cplfunctionvec::vec_set)
   .method("OptimMargInt",&cplfunctionvec::OptimMargInt,"Solves optimisation problem")
-  .method("SerialPush_3Breaks_Functions",&cplfunctionvec::SerialPush_3Breaks_Functions)
+  .method("SerialPush_1Breaks_Functions",&cplfunctionvec::SerialPush_1Breaks_Functions)
+  .method("SerialPush_2Breaks_Functions",&cplfunctionvec::SerialPush_2Breaks_Functions)
   ;
 
  // function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
 //  ;
 
-  function("Suml",&Sum,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
+  function("Suml",&Suml,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
   ;
   function("InfConv",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
@@ -80,5 +84,28 @@ RCPP_MODULE(mod_cpqfunction){
 
   function("Sumq",&Sumq,"This function allows to sum two functions of class Rcpp_cpqfunction. It does not modify the imput functions.")
   ;
+  function("InfConvq",&InfConvq,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
+  ;
+
+  class_<cpqfunctionvec>( "cpqfunctionvec")
+  .constructor()
+  .constructor<int>()
+  .method( "size", &cpqfunctionvec::size)
+ // .method("capacity", &cpqfunctionvec::capacity,"Return size of allocated storage capacity. Returns the size of the storage space currently allocated for the vector, expressed in terms of elements.")
+//  .method( "max_size", &cpqfunctionvec::max_size)
+  .method( "push_back", &cpqfunctionvec::push_back )
+//  .const_method( "at", &cpqfunctionvec::at )
+  .method("[[",&cpqfunctionvec::vec_get)
+  .method("[[<-",&cpqfunctionvec::vec_set)
+  .method("OptimMargInt",&cpqfunctionvec::OptimMargInt,"Solves optimisation problem")
+  .method("SerialPush_1Breaks_Functions",&cpqfunctionvec::SerialPush_1Breaks_Functions)
+  .method("SerialPush_0Breaks_Functions",&cpqfunctionvec::SerialPush_0Breaks_Functions)
+  ;
+
+ // function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
+//  ;
+
+
+
 
 }

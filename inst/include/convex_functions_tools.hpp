@@ -24,6 +24,7 @@ bool isincreasing(Rcpp::NumericVector arg){
 // here polynom is 1/2 ax^2+bx+c
 double getSlope(pair<double,double> Coefficients,double val){
 // returns the slope at val given Coefficients a and b.f
+	// Coefficients are (a,b)
    if (val==-numeric_limits<double>::infinity()&&Coefficients.first!=0){
   	 if (Coefficients.first<0){
 			 return(numeric_limits<double>::infinity());
@@ -37,13 +38,33 @@ double getSlope(pair<double,double> Coefficients,double val){
 			 }else{
 				 return(numeric_limits<double>::infinity());
 			 }
-		 }else{
-       if (Coefficients.first==0){
-         return(Coefficients.second);
-       }
-       else{
-			   return(Coefficients.first*val+Coefficients.second);
-       }
+		 }else
+		 {
+			if (Coefficients.first==0){
+				return(Coefficients.second);
+			}
+			else if (Coefficients.first==-numeric_limits<double>::infinity()){
+				if (val<0)
+				{
+					return(numeric_limits<double>::infinity());
+				}else
+				{
+					return(-numeric_limits<double>::infinity());
+				}
+
+			}else if (Coefficients.first==numeric_limits<double>::infinity())
+			{
+				if (val<0)
+				{
+					return(-numeric_limits<double>::infinity());
+				}else
+				{
+					return(numeric_limits<double>::infinity());
+				}
+			}else
+			{
+				return(Coefficients.first*val+Coefficients.second);
+			}
 		 }
 	 }
 };

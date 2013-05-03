@@ -24,7 +24,7 @@ evalqOnLoad({
 						}
 						plot(xx,yy,type='l',...);
 					} )
-			
+
 			setMethod( "plot", signature(x="Rcpp_cpqfunction",y="ANY") , function(x,y,...) {
 						
 						firstBreakVal=x$FirstBreakVal_;
@@ -55,6 +55,12 @@ evalqOnLoad({
 					} )
 			
 			setMethod( "show", "Rcpp_cplfunction" , function(object) {      
+						cat('\n')
+						cat('Value of f at first non infinite break: ',object$FirstBreakVal_,'\n');
+						print(object$get_BreakPoints_());
+					} )
+			
+			setMethod( "show", "Rcpp_cplfunction2" , function(object) {      
 						cat('\n')
 						cat('Value of f at first non infinite break: ',object$FirstBreakVal_,'\n');
 						print(object$get_BreakPoints_());

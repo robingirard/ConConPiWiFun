@@ -26,18 +26,18 @@ Robin Girard
 #### Lists of CCPWLfunc
 #Simple pushback
 CCPWLfuncList=new(cplfunctionvec) 
-CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0,Inf),0))
-CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0,Inf),0))
+CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0),0))
+CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0),0))
 
 CCPWLfuncList=new(cplfunctionvec) 
-n=1000; Y=rnorm(n); S1=array(-1,n);S2=array(1,n); B0=array(-Inf,n); B1=rnorm(n); B2=array(Inf,n);
+n=1000; Y=rnorm(n); S1=array(-1,n);S2=array(1,n); B0=array(-Inf,n); B1=rnorm(n); 
 for (i in 1:n){
-  CCPWLfuncList$push_back(new(cplfunction,c(S1[i],S2[i]) ,c(B0[i],B1[i],B2[i]),0))
+  CCPWLfuncList$push_back(new(cplfunction,c(S1[i],S2[i]) ,c(B0[i],B1[i]),0))
 }
 CCPWLfuncList$size() ## gives the size 
 ## The same but faster
 CCPWLfuncList=new(cplfunctionvec) 
-CCPWLfuncList$SerialPush_3Breaks_Functions(S1,S2,B0,B1,B2);
+CCPWLfuncList$SerialPush_2Breaks_Functions(S1,S2,B0,B1);
 
 #### method OptimMargInt solves 
 #     				min_x sum_i=1^n C_i(x_i)
@@ -55,11 +55,8 @@ plot(Y,type='l',ylim=c(min(Y),max(diffinv(res$xEtoile)[1:n+1])))
 lines(y=Cmoins,x=1:n,col='blue'); lines(y=Cplus,x=1:n,col='blue');
 lines(y=diffinv(res$xEtoile)[1:n+1],x=1:n,col='red')
 
-
 rm(list=ls())
 gc()
-#### Infconvolution application is let as an exercise for students of Master REST. Will be in further version
-
 
 
 

@@ -141,4 +141,15 @@ cat("tests for the sum: \n")
     cat("F4",": \n"); print(F4);
   }
 
+
+#### Testing the Etoile
+cat("tests for the Etoile: \n")
+  cat("\t\t test 1 : ")
+  #Value of f at first non infinite break:  4
+  F1=new(cpqfunction,c(0),c(1),c(-Inf,Inf),0) ## f(x)=x^2+cte
+  F0=F1$clone();
+  F0$Etoile()
+  
+
+rm(list=ls())
   gc()

@@ -1,12 +1,12 @@
 \name{cplfunction}
 \alias{cplfunction}
-\alias{Sum}
+\alias{Suml}
 \alias{cplfunction}
 \alias{Rcpp_cplfunction-class}
 \alias{plot-methods}
 \alias{plot,ANY-method}
 \alias{plot,Rcpp_cplfunction-method}
-\alias{InfConv}
+\alias{InfConvl}
 %\alias{show-methods}
 %\alias{show,ANY-method}
 \alias{show,Rcpp_cplfunction-method}
@@ -29,16 +29,16 @@ Robin Girard
  to See Also as \code{\link{cplfunction}},
 }
 \examples{
-
 ##
 #Construction of a piecewise linear function
 ##
-Slopes=c(-1,2) # increasing ! convexity is required
+
+
+Slopes=c(-1,2,Inf) # increasing ! convexity is required
 Breakpoints=c(-Inf,2,4) # increasing. length is number of slopes +1
 FirstNonInfBreakpointVal=3
 CCPWLfunc1=new(cplfunction,Slopes,Breakpoints,FirstNonInfBreakpointVal)
 plot(CCPWLfunc1) #visualisation method
-CCPWLfunc1$get_BreakPoints_() ## return Breaks AND Slopes
 
 
 ###Etoile transformation (legendre transform of f)
@@ -51,7 +51,7 @@ plot(CCPWLfunc1)   ## (f^*)^* is f !
 
 ###Squeeze function 
 # Changes f, no return value
-left=-1; right=4
+left=-Inf; right=3
 CCPWLfunc1$Squeeze(left,right) # CCPWLfunc1 is now infinite (or not definite) out of [left,right]
 # i.e. all breakpoints out of [left,right] removed
 
@@ -64,9 +64,11 @@ plot(CCPWLfunc1); #now f = CCPWLfunc1 is replaced by x -> f(y-x)
 
 
 ### Sum function (uses fast insertion) do not affect operands 
-CCPWLfunc1=new(cplfunction,c(-1,2) ,c(-Inf,2,4),0)
-CCPWLfunc2=new(cplfunction,c(-1,2),c(-Inf,1,3),0)
-CCPWLfunc1plus2=Sum(CCPWLfunc1,CCPWLfunc2)
+CCPWLfunc1=new(cplfunction,c(-1,2,Inf) ,c(-Inf,2,4),0)
+CCPWLfunc2=new(cplfunction,c(-1,2,Inf),c(-Inf,1,3),0)
+CCPWLfunc1plus2=Suml(CCPWLfunc1,CCPWLfunc2)
+CCPWLfunc1plus2
+
 
 par(mfrow=c(1,3))
 plot(CCPWLfunc2,col='red'); 

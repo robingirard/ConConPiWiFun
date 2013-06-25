@@ -1,6 +1,7 @@
 \name{cpqfunction}
 \alias{cpqfunction}
-\alias{Sum}
+\alias{Sumq}
+\alias{InfConvq}
 \alias{cpqfunction}
 \alias{Rcpp_cpqfunction-class}
 %\alias{plot-methods}
@@ -38,7 +39,7 @@ Breakpoints=c(-Inf,2,4) # increasing. length is number of slopes +1
 FirstNonInfBreakpointVal=3
 CCPWLfunc1=new(cpqfunction,Slopes0,Slopes1,Breakpoints,FirstNonInfBreakpointVal)
 CCPWLfunc1$get_BreakPoints_() ## return Breaks AND Slopes
-
+plot(CCPWLfunc1)
 
 ###Etoile transformation (legendre transform of f)
 # Changes f no return value

@@ -126,4 +126,6 @@ class cpqfunctionvec {
 };
 
 
+
+
 #endif /* CPLQFUNCTIONVEC_HPP_ */

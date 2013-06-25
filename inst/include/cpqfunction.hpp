@@ -43,18 +43,20 @@ class  cpqfunction {
     cpqfunction(Rcpp::NumericVector Slopes0,Rcpp::NumericVector Slopes1, Rcpp::NumericVector BreakPoints,double FirstBreakVal){
   	int NbSlopes=  Slopes1.size();
 		if (NbSlopes+1==BreakPoints.size()){
-			if (isincreasing(Slopes0)&&isincreasing(Slopes1)){
 				if (isincreasing(BreakPoints)){
 					for (int i=0; i<NbSlopes; i++){
 						pair<double,double> coeffs=Slopes2Coeffs(Slopes0[i],Slopes1[i]);
 						  if (
 								  Slopes0[i]<=Slopes1[i] &&
 								  	  (i==0 ||
-								  	   getSlope(coeffs,BreakPoints[i])>= getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i]))
+								  	   getSlope(coeffs,BreakPoints[i])>= getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])-1e-7)
 							 )
 						  {
 							Breakpoints_[BreakPoints[i]]=Slopes2Coeffs(Slopes0[i],Slopes1[i]);
 						  }else{
+								Rcout<<"getSlope(coeffs,BreakPoints[i])"<<getSlope(coeffs,BreakPoints[i])<<endl;
+								Rcout<<"getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])"<<getSlope(Slopes2Coeffs(Slopes0[i-1],Slopes1[i-1]),BreakPoints[i])<<endl;
+
 							Rprintf( "Error: non increasing Slopes" ) ;
 									throw nonincreasingslopes() ;
 						  }
@@ -65,10 +67,6 @@ class  cpqfunction {
 					Rprintf( "Error: non increasing breakpoints" ) ;
 					throw nonincreasingbreakpoints() ;
 				}
-			}else{
-				Rprintf( "Error: non increasing Slopes" ) ;
-				throw nonincreasingslopes() ;
-			}
 		}else{
 			Rprintf( "Error: number of Slopes must be number of breaks -1 " ) ;
 			throw nonincreasingslopes() ;
@@ -203,7 +201,7 @@ class  cpqfunction {
     	else
     	{
     		  std::map<double, pair<double,double> >::const_reverse_iterator
-    		    last_element_not_greater_than(Breakpoints_.upper_bound(x));
+    		  last_element_not_greater_than(Breakpoints_.upper_bound(x));
 
     		  if (Breakpoints_.rend() == last_element_not_greater_than) {
     		    return -1;
@@ -251,8 +249,6 @@ class  cpqfunction {
           		   it=Breakpoints_.insert(pair<double, pair<double,double> > (breakpoint, pair<double,double>(0.0,0.0))).first;
           		   it--; ittmp=it; it++;
           		   if (Breakpoints_.size()!=initialsize){
-      //    			   cout<<(*it).first<<","<<(*it).second<<endl;
-          			 //map<double, pair<double,double> >::iterator it2=Breakpoints_.begin();
           			(*it).second = (*ittmp).second;
           		   }
 
@@ -421,7 +417,7 @@ class  cpqfunction {
    }
 
     double Argmin(){
-	  // cout << __FUNCTION__ << endl;
+	  // Rcout << __FUNCTION__ << endl;
 	   //this->print();
 	   double res;
 	   cpqfunction tmp(*this);
@@ -474,7 +470,7 @@ class  cpqfunction {
       		   }
 	       }
 	   }
-	  // cout<<"res="<<res<<endl;
+	  // Rcout<<"res="<<res<<endl;
 	   return(res);
    }
 
@@ -544,11 +540,11 @@ class  cpqfunction {
       if (tmp1.Breakpoints_.size()<=2){
         if (tmp1.Breakpoints_.size()==1){
   			  if (tmp1.Breakpoints_.begin()->first!=Breakpoints_.begin()->first){
-  				  cout<<"in Sumf"<<endl;
+  				  Rcout<<"in Sumf"<<endl;
   				  throw emptyfunc();
   			  }
         }else{
-          //cout << tmp1.Breakpoints_.rbegin()->first;
+          //Rcout << tmp1.Breakpoints_.rbegin()->first;
         	(*this).AddSimple(tmp1.Breakpoints_.begin()->first,
         					tmp1.Breakpoints_.begin()->second,
         					tmp1.Breakpoints_.begin()->second,

@@ -6,7 +6,7 @@ plot(F1)
 
 #### Lists of CCPWLfunc
 #Simple pushback
-CCPWLfuncList=new(cplfunctionvec) 
+CCPWLfuncList=new(cpqfunctionvec) 
 CCPWLfuncList$push_back(new(cpqfunction,c(0),c(1),c(-2, 2),0))
 CCPWLfuncList$push_back(new(cpqfunction,c(0),c(1),c(-2, 2),0))
 
@@ -27,6 +27,9 @@ CCPWLfuncList$SerialPush_0Breaks_Functions(S0,S1);
 
 Pmoins=array(-1,n);Pplus=array(1,n);Cmoins=array(0,n);Cplus=array(5,n);
 res=CCPWLfuncList$OptimMargInt(Pmoins,Pplus,Cmoins,Cplus)
+
+
+
 res=microbenchmark(CCPWLfuncList$OptimMargInt(Pmoins,Pplus,Cmoins,Cplus))
 par(mfrow=c(1,2))
 plot(Y,type='l')

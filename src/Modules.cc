@@ -1,9 +1,6 @@
 #include "ConConPiWiFun.h"
 
 
-
-
-
 RCPP_MODULE(mod_cplfunction){
   using namespace Rcpp;
 
@@ -26,6 +23,10 @@ RCPP_MODULE(mod_cplfunction){
 	.method("Swap",&cplfunction::Swap)
 	.method("Etoile",&cplfunction::Etoile)
 	.method("eq",&cplfunction::eq)
+	.method("Legendre",&cplfunction::Legendre)
+	.method("EpiSum_Withline",&cplfunction::EpiSum_Withline)
+	//.method("flip_push_left_pull_right",&cplfunction::flip_push_left_pull_right)
+	//.method("flip_push_left",&cplfunction::flip_push_left)
  // .finalizer( &finalizer_of_cplfunction)
 	;
 
@@ -40,16 +41,22 @@ RCPP_MODULE(mod_cplfunction){
   .method("[[",&cplfunctionvec::vec_get)
   .method("[[<-",&cplfunctionvec::vec_set)
   .method("OptimMargInt",&cplfunctionvec::OptimMargInt,"Solves optimisation problem")
+ // .method("OptimMargInt2",&cplfunctionvec::OptimMargInt2,"Solves optimisation problem")
   .method("SerialPush_1Breaks_Functions",&cplfunctionvec::SerialPush_1Breaks_Functions)
   .method("SerialPush_2Breaks_Functions",&cplfunctionvec::SerialPush_2Breaks_Functions)
   ;
 
- // function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
-//  ;
 
+
+  function("OptimPriceStorage",&OptimPriceStorage)
+  ;
+
+
+  function("SerialOptimPriceStorage",&SerialOptimPriceStorage)
+  ;
   function("Suml",&Suml,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
   ;
-  function("InfConv",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
+  function("InfConvl",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
 
 }

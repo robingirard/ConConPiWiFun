@@ -35,7 +35,7 @@ cplfunction InfConv(cplfunction const & cplFunction_1,cplfunction const & cplFun
 // }
 
 cplfunction InfConfFunct(cplfunction const & cplFunction_1,cplfunction const & cplFunction_2,double y ){
-       cplfunction tmp1=cplFunction_1,tmp2=cplFunction_2;
+       cplfunction tmp1(cplFunction_1),tmp2(cplFunction_2);
     	 tmp2.Swap(y);
     	 cplfunction B=Suml(tmp1,tmp2);
     	 return(B);

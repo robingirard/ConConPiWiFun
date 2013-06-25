@@ -41,7 +41,6 @@ pair<double,double> Slopes2Coeffs(double Slopes0,double Slopes1);
 
 #include "cplfunctionvec.hpp"
 #include "cpqfunctionvec.hpp"
-
 //cplfunction InfConfFunct(cplfunction const & cplFunction1,cplfunction const & cplFunction2,double y );
 //cplfunction Sum(cplfunction const & cplfunction1,cplfunction const & cplfunction2);
 //cpqfunction Sumq(cpqfunction const & cpqfunction1,cpqfunction const & cpqfunction2);

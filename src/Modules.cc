@@ -48,15 +48,15 @@ RCPP_MODULE(mod_cplfunction){
 
 
 
-  function("OptimPriceStorage",&OptimPriceStorage)
+  Rcpp::function("OptimPriceStorage",&OptimPriceStorage)
   ;
 
 
-  function("SerialOptimPriceStorage",&SerialOptimPriceStorage)
+  Rcpp::function("SerialOptimPriceStorage",&SerialOptimPriceStorage)
   ;
-  function("Suml",&Suml,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
+  Rcpp::function("Suml",&Suml,"This function allows to sum two functions of class Rcpp_cplfunction. It does not modify the imput functions.")
   ;
-  function("InfConvl",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
+  Rcpp::function("InfConvl",&InfConv,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
 
 }
@@ -89,9 +89,9 @@ RCPP_MODULE(mod_cpqfunction){
  // .finalizer( &finalizer_of_cplfunction)
 	;
 
-  function("Sumq",&Sumq,"This function allows to sum two functions of class Rcpp_cpqfunction. It does not modify the imput functions.")
+  Rcpp::function("Sumq",&Sumq,"This function allows to sum two functions of class Rcpp_cpqfunction. It does not modify the imput functions.")
   ;
-  function("InfConvq",&InfConvq,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
+  Rcpp::function("InfConvq",&InfConvq,"This function performs infimum convolution of two functions of class Rcpp_cplfunction.")
   ;
 
   class_<cpqfunctionvec>( "cpqfunctionvec")
@@ -109,7 +109,7 @@ RCPP_MODULE(mod_cpqfunction){
   .method("SerialPush_0Breaks_Functions",&cpqfunctionvec::SerialPush_0Breaks_Functions)
   ;
 
- // function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
+ // Rcpp::function("Create_3breaks_cplfunctionvec",&Create_3breaks_cplfunctionvec)
 //  ;
 
 

@@ -18,7 +18,7 @@ cplfunction Suml(cplfunction const & cplfunction_1,cplfunction const & cplfuncti
    			tmp1.Sumf(tmp2);
    			return(tmp1);
    		}
-};
+}
 
 
 cplfunction InfConv(cplfunction const & cplFunction_1,cplfunction const & cplFunction_2){
@@ -28,7 +28,7 @@ cplfunction InfConv(cplfunction const & cplFunction_1,cplfunction const & cplFun
     	 cplfunction res=Suml(tmp1,tmp2);
     	 res.Etoile();
     	 return(res);
-     };
+     }
 // static void finalizer_of_cplfunction( cplfunction* ptr ){
 //    ptr->cplfunction::~cplfunction();
     //printf("finalizer has been called\n");
@@ -39,7 +39,7 @@ cplfunction InfConfFunct(cplfunction const & cplFunction_1,cplfunction const & c
     	 tmp2.Swap(y);
     	 cplfunction B=Suml(tmp1,tmp2);
     	 return(B);
-     };
+     }
 
 
 
@@ -52,7 +52,7 @@ cpqfunction Sumq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfuncti
    			tmp1.Sumf(tmp2);
    			return(tmp1);
    		}
-};
+}
 
 
 cpqfunction InfConvq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfunction_2){
@@ -62,7 +62,7 @@ cpqfunction InfConvq(cpqfunction const & cpqfunction_1,cpqfunction const & cpqfu
     	 cpqfunction res=Sumq(tmp1,tmp2);
     	 res.Etoile();
     	 return(res);
-     };
+     }
 // static void finalizer_of_cpqfunction( cpqfunction* ptr ){
 //    ptr->cpqfunction::~cpqfunction();
     //printf("finalizer has been called\n");
@@ -73,7 +73,7 @@ cpqfunction InfConfFunctq(cpqfunction const & cpqfunction_1,cpqfunction const & 
     	 tmp2.Swap(y);
     	 cpqfunction B=Sumq(tmp1,tmp2);
     	 return(B);
-     };
+     }
 
 
 

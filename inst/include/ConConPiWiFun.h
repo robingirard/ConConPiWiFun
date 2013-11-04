@@ -7,16 +7,21 @@
 
 #ifndef CONCONPIWIFUN_H_
 #define CONCONPIWIFUN_H_
-#include <iostream>
-#include <math.h>
-#include <limits>
+
+
 #include <Rcpp.h>
-#include <vector>
-#include <map>
+
+using namespace Rcpp;
+using namespace std;
+
+//#include <iostream>
+//#include <math.h>
+//#include <limits>
+
+//#include <vector>
+//#include <map>
 #include <assert.h>
 
-using namespace std;
-using namespace Rcpp;
 class cplfunction ;
 class cplfunctionvec;
 class cpqfunction ;
@@ -28,10 +33,10 @@ RCPP_EXPOSED_CLASS(cpqfunction)
 RCPP_EXPOSED_CLASS(cpqfunctionvec)
 
 bool isincreasing(Rcpp::NumericVector arg);
-double getSlope(pair<double,double> Coefficients,double val);
-double getVal(pair<double,double> Coefficients,double val);
-double getXetoile(pair<double,double> Coefficients);
-pair<double,double> Slopes2Coeffs(double Slopes0,double Slopes1);
+double getSlope(std::pair<double,double> Coefficients,double val);
+double getVal(std::pair<double,double> Coefficients,double val);
+double getXetoile(std::pair<double,double> Coefficients);
+std::pair<double,double> Slopes2Coeffs(double Slopes0,double Slopes1);
 
 #include "convex_functions_tools.hpp"
 

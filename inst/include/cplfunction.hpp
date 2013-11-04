@@ -27,7 +27,7 @@ class cplfunction {
 	//
 
     public:
-    map<double,double> Breakpoints_; // breakpoints
+    std::map<double,double> Breakpoints_; // breakpoints
     double FirstBreakVal_; // firstbreakval
     double FirstSlopeVal_ ;
 
@@ -37,7 +37,7 @@ class cplfunction {
 
     cplfunction()
     	: Breakpoints_(),FirstBreakVal_(0),
-    	  FirstSlopeVal_(-numeric_limits<double>::infinity()){};
+    	  FirstSlopeVal_(-std::numeric_limits<double>::infinity()){};
 
     class emptyfunc : public std::exception {
       public:
@@ -89,7 +89,7 @@ class cplfunction {
     };
 
     cplfunction(double uniquebreak,double val)//a single point has 1 break and infinite FirstSlopeVal_
-    	:Breakpoints_(),FirstBreakVal_(val),FirstSlopeVal_(numeric_limits<double>::infinity())
+    	:Breakpoints_(),FirstBreakVal_(val),FirstSlopeVal_(std::numeric_limits<double>::infinity())
     {
     	Breakpoints_[uniquebreak]=0;
     };
@@ -108,7 +108,7 @@ class cplfunction {
 		:Breakpoints_(),
 		 FirstBreakVal_(val),FirstSlopeVal_(Slope1)
     {
-    	Breakpoints_[-numeric_limits<double>::infinity()]=0;
+    	Breakpoints_[-std::numeric_limits<double>::infinity()]=0;
     	Breakpoints_[uniquebreak]=Slope2;
     };
     cplfunction(double breakleft,double breakright,double val,double Slope1,double Slope2)
@@ -126,7 +126,7 @@ class cplfunction {
     	std::vector<double> Breakpoints(nbBreaks);
   		std::vector<double> Slopes(nbBreaks);
   		int compteur=0;
-  		map<double,double>::iterator Breakpoints_it=Breakpoints_.begin();
+  		std::map<double,double>::iterator Breakpoints_it=Breakpoints_.begin();
   		while(Breakpoints_it != Breakpoints_.end())
   		{
   			Breakpoints[compteur]=Breakpoints_it->first;
@@ -151,7 +151,7 @@ class cplfunction {
      	std::vector<double> Breakpoints(nbBreaks);
    		std::vector<double> Slopes(nbBreaks);
    		int compteur=0;
-   		map<double,double>::iterator Breakpoints_it=Breakpoints_.begin();
+   		std::map<double,double>::iterator Breakpoints_it=Breakpoints_.begin();
    		if (Breakpoints_it->second!=0)
    		{
    			Rcout<<"Warning first Slope diff non null =  "<< Breakpoints_it->second <<", ";
@@ -171,7 +171,7 @@ class cplfunction {
    			}
    			Breakpoints_it++; compteur++;
    		}
-   		Rcout<<endl;
+   		Rcpp::Rcout<<std::endl;
    	}
 
 
@@ -208,7 +208,7 @@ class cplfunction {
     {
     	//Rcout << __FUNCTION__ << "("<<leftslope<< ","<<rightslope<<","<<breakpoint<<")"<<"in "<<endl;
     	//this->print();
-    	map<double, double>::iterator i = Breakpoints_.begin();
+    	std::map<double, double>::iterator i = Breakpoints_.begin();
     	FirstBreakVal_=FirstBreakVal_+val;
 
 		if (breakpoint<=Breakpoints_.begin()->first)
@@ -216,7 +216,7 @@ class cplfunction {
 			  FirstSlopeVal_=FirstSlopeVal_+rightslope;
 		}else
 		{
-		  if (breakpoint>=Breakpoints_.rbegin()->first && Breakpoints_.rbegin()->second== numeric_limits<double>::infinity()){
+		  if (breakpoint>=Breakpoints_.rbegin()->first && Breakpoints_.rbegin()->second== std::numeric_limits<double>::infinity()){
 			  FirstSlopeVal_=FirstSlopeVal_+leftslope;
 		  }else
 		  {
@@ -224,7 +224,7 @@ class cplfunction {
 
 			FirstSlopeVal_=FirstSlopeVal_+leftslope;
 			double diff=rightslope-leftslope;
-			pair<map<double, double>::iterator,bool> tmp_insert=Breakpoints_.insert(pair<double, double> (breakpoint, diff));
+			std::pair<std::map<double, double>::iterator,bool> tmp_insert=Breakpoints_.insert(pair<double, double> (breakpoint, diff));
 			if (!tmp_insert.second)
 			{//insert the new breakpoint if it does not exist and if it exists increment :
 				double tmpval=tmp_insert.first->second;
@@ -246,8 +246,8 @@ class cplfunction {
  	   if (Breakpoints_.size()!=cplfunction1.Breakpoints_.size()){
  		   return(false);
  	   }else{
-   		   map<double, double>::iterator i = Breakpoints_.begin();
-				map<double, double>::const_iterator	   i2=cplfunction1.Breakpoints_.begin();
+   		   std::map<double, double>::iterator i = Breakpoints_.begin();
+				std::map<double, double>::const_iterator	   i2=cplfunction1.Breakpoints_.begin();
    		   while(i != Breakpoints_.end()) {
    			   if (i->first==i2->first&&i->second==i2->second){
    				 ++i;++i2;
@@ -321,24 +321,24 @@ class cplfunction {
     {
     	if (Breakpoints_.size()==1)
     	{
-    		return(FirstSlopeVal_!=numeric_limits<double>::infinity());
+    		return(FirstSlopeVal_!=std::numeric_limits<double>::infinity());
     	}else
     	{
-    		return(((Breakpoints_.rbegin()->second!=numeric_limits<double>::infinity()) &&
-    				FirstSlopeVal_!=numeric_limits<double>::infinity()));
+    		return(((Breakpoints_.rbegin()->second!=std::numeric_limits<double>::infinity()) &&
+    				FirstSlopeVal_!=std::numeric_limits<double>::infinity()));
     	}
     }
 
     bool is_a_point()
     {
-    	return(FirstSlopeVal_==numeric_limits<double>::infinity());
+    	return(FirstSlopeVal_==std::numeric_limits<double>::infinity());
     }
 
     bool is_an_infinite_line()
     {
-    	return(FirstSlopeVal_!=numeric_limits<double>::infinity() &&
+    	return(FirstSlopeVal_!=std::numeric_limits<double>::infinity() &&
     			Breakpoints_.size()==1 &&
-    			(Breakpoints_.begin())->first==-numeric_limits<double>::infinity());
+    			(Breakpoints_.begin())->first==-std::numeric_limits<double>::infinity());
     }
 
     // Etoile is replaced by "Legendre"
@@ -354,7 +354,7 @@ class cplfunction {
 		{// a point get transformed into a line
 			FirstBreakVal_=-tmp.FirstBreakVal_;
 			FirstSlopeVal_=(tmp.Breakpoints_.begin())->first;
-			Breakpoints_[-numeric_limits<double>::infinity()]=0;
+			Breakpoints_[-std::numeric_limits<double>::infinity()]=0;
 			done=true;
 		}
 
@@ -362,7 +362,7 @@ class cplfunction {
 		{// an infinite line get transformed into a point
 			FirstBreakVal_=-tmp.FirstBreakVal_;
 			Breakpoints_[(tmp.Breakpoints_.begin())->second+FirstSlopeVal_]=0;
-			FirstSlopeVal_=numeric_limits<double>::infinity();
+			FirstSlopeVal_=std::numeric_limits<double>::infinity();
 			done=true;
 		}
 		if (tmp.Breakpoints_.size()==1 && !done)
@@ -370,8 +370,8 @@ class cplfunction {
 		 // gives a half line with 2 breaks
 			FirstBreakVal_=-tmp.FirstBreakVal_;
 			FirstSlopeVal_=(tmp.Breakpoints_.begin())->first;
-			Breakpoints_[-numeric_limits<double>::infinity()]=0;
-			Breakpoints_[tmp.FirstSlopeVal_]=numeric_limits<double>::infinity();
+			Breakpoints_[-std::numeric_limits<double>::infinity()]=0;
+			Breakpoints_[tmp.FirstSlopeVal_]=std::numeric_limits<double>::infinity();
 			done=true;
 		}
 		if (done)
@@ -380,14 +380,14 @@ class cplfunction {
 		}
 		else
 		{
-			map<double,double>::iterator it=tmp.Breakpoints_.begin();
-			map<double,double>::iterator itplus1=tmp.Breakpoints_.begin(); ++itplus1;
+			std::map<double,double>::iterator it=tmp.Breakpoints_.begin();
+			std::map<double,double>::iterator itplus1=tmp.Breakpoints_.begin(); ++itplus1;
 			FirstBreakVal_=-tmp.FirstBreakVal_;
 			double NewBreak,NewSlope,PastBreakPrec,NewBreakPrec;
-			if ((it->first!=-numeric_limits<double>::infinity()))
+			if ((it->first!=-std::numeric_limits<double>::infinity()))
 			{// first break is not infinity : this will give a slope and a first break with inf
 				FirstSlopeVal_=it->first;
-				Breakpoints_[-numeric_limits<double>::infinity()]=0;
+				Breakpoints_[-std::numeric_limits<double>::infinity()]=0;
 			}else
 			{
 				FirstSlopeVal_=itplus1->first;
@@ -407,7 +407,7 @@ class cplfunction {
 			if (tmp.is_last_infinity())
 			{
 				NewBreak=it->second+NewBreakPrec;
-				Breakpoints_[NewBreak]=numeric_limits<double>::infinity();
+				Breakpoints_[NewBreak]=std::numeric_limits<double>::infinity();
 			}
 		}
 	//	Rcout << __FUNCTION__<< " out" <<endl;
@@ -425,7 +425,7 @@ class cplfunction {
 			Breakpoints_.clear();
 			FirstSlopeVal_=Slope;
 			Breakpoints_[lowerbound+uniquebreak]=0;
-			Breakpoints_[upperbound+uniquebreak]=numeric_limits<double>::infinity();
+			Breakpoints_[upperbound+uniquebreak]=std::numeric_limits<double>::infinity();
 			done=true;
 		}
 
@@ -460,9 +460,9 @@ class cplfunction {
 		else
 		{// there are 2 breaks or more.
 
-	    	map<double,double>::iterator it=Breakpoints_.begin();
-	    	map<double,double>::iterator itplus1=Breakpoints_.begin();++itplus1;
-	    	map<double,double>::iterator itend=Breakpoints_.end();
+	    	std::map<double,double>::iterator it=Breakpoints_.begin();
+	    	std::map<double,double>::iterator itplus1=Breakpoints_.begin();++itplus1;
+	    	std::map<double,double>::iterator itend=Breakpoints_.end();
 	    	double CurrentSlope=FirstSlopeVal_;
 	    	double newbreakval,newbreakslope,x;
 	    	bool newbreak;
@@ -491,7 +491,7 @@ class cplfunction {
 						newbreak=true;
 						newbreakval=itplus1->first+lowerbound;
 						newbreakslope=Slope-CurrentSlope;
-						if (itplus1->second!=numeric_limits<double>::infinity())
+						if (itplus1->second!=std::numeric_limits<double>::infinity())
 						{
 							itplus1->second=itplus1->second-newbreakslope;
 						}
@@ -508,7 +508,7 @@ class cplfunction {
 	    	}else
 	    	{// Slope were lower or equal to the first Slope
 	    		//Slope <=CurrentSlope
-	    		if (it->first==-numeric_limits<double>::infinity())
+	    		if (it->first==-std::numeric_limits<double>::infinity())
 	    		{
 	    			newbreak=false;
 					while (it!=itend)
@@ -569,15 +569,15 @@ class cplfunction {
  	   if (is_a_point()){res=Breakpoints_.begin()->first;}
  	   if (is_an_infinite_line()){
  		   if (FirstSlopeVal_==0){res=0;}
- 		   else if (FirstSlopeVal_<0){res=numeric_limits<double>::infinity();}
- 		   else if (FirstSlopeVal_>0){res=-numeric_limits<double>::infinity();}
+ 		   else if (FirstSlopeVal_<0){res=std::numeric_limits<double>::infinity();}
+ 		   else if (FirstSlopeVal_>0){res=-std::numeric_limits<double>::infinity();}
  	   }
 
 	   if (precslope>0){
 		   res =Breakpoints_.begin()->first;
 	   }else{
-		 map<double, double>::iterator i = Breakpoints_.begin();
-		 map<double, double>::iterator iend = Breakpoints_.end();
+		 std::map<double, double>::iterator i = Breakpoints_.begin();
+		 std::map<double, double>::iterator iend = Breakpoints_.end();
 		++i;
 		  while(i != iend) {
 				res=i->first;
@@ -586,7 +586,7 @@ class cplfunction {
 				++i;
 				if(precslope<0 && is_last_infinity())
 				{
-					res=numeric_limits<double>::infinity();
+					res=std::numeric_limits<double>::infinity();
 				}
 		  }
 	   }
@@ -616,20 +616,20 @@ bool done=false;
 			{
 				double tmpbreak=Breakpoints_.rbegin()->first;
 				Breakpoints_.clear();
-				Breakpoints_[tmpbreak]=numeric_limits<double>::infinity();
+				Breakpoints_[tmpbreak]=std::numeric_limits<double>::infinity();
 				done=true;
 			}else if (Breakpoints_.begin()->first-rightBreak<arg_){
 				double tmpbreak=Breakpoints_.begin()->first;
 				Breakpoints_.clear();
-				Breakpoints_[tmpbreak]=numeric_limits<double>::infinity();
+				Breakpoints_[tmpbreak]=std::numeric_limits<double>::infinity();
 				done=true;
 			}else
 			{
-				if (leftBreak>=rightBreak){Rcout<<"leftBreak>=rightBreak"<<endl;}
-				Rcout<<"Empty function thrown in Squeeze"<<endl;
-				Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<endl;
+				if (leftBreak>=rightBreak){Rcout<<"leftBreak>=rightBreak"<<std::endl;}
+				Rcpp::Rcout<<"Empty function thrown in Squeeze"<<std::endl;
+				Rcpp::Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<std::endl;
 				this->print();
-				Rcout<< "Breakpoints_.begin()->first-rightBreak"<<Breakpoints_.begin()->first-rightBreak<<endl;
+				Rcpp::Rcout<< "Breakpoints_.begin()->first-rightBreak"<<Breakpoints_.begin()->first-rightBreak<<std::endl;
 				throw emptyfunc();
 			}
 
@@ -640,8 +640,8 @@ bool done=false;
 		}else
 		{
 			/// taking care of left break
-			map<double, double>::iterator it=Breakpoints_.begin();
-			map<double, double>::iterator itend=Breakpoints_.end();
+			std::map<double, double>::iterator it=Breakpoints_.begin();
+			std::map<double, double>::iterator itend=Breakpoints_.end();
 			if (it->first<leftBreak)
 			{// something will have to be cut on the left
 				while (it!=itend && it->first<leftBreak )
@@ -663,7 +663,7 @@ bool done=false;
 						FirstSlopeVal_=FirstSlopeVal_+Breakpoints_.begin()->second;
 						Breakpoints_.begin()->second=0.0;
 					}else{
-						Breakpoints_.insert(pair<double, double> (leftBreak, 0.0));
+						Breakpoints_.insert(std::pair<double, double> (leftBreak, 0.0));
 					}
 				}
 			}
@@ -671,13 +671,13 @@ bool done=false;
 			// taking care of right break
 			if (is_last_infinity())
 			{
-				if (rightBreak!=numeric_limits<double>::infinity())
+				if (rightBreak!=std::numeric_limits<double>::infinity())
 				{// something has to be cut on the right
-					pair<map<double, double>::iterator,bool> tmp_insert=Breakpoints_.insert(pair<double, double> (rightBreak, numeric_limits<double>::infinity()));
-					map<double, double>::iterator tmp_insert_it=tmp_insert.first;
+					std::pair<std::map<double, double>::iterator,bool> tmp_insert=Breakpoints_.insert(std::pair<double, double> (rightBreak, numeric_limits<double>::infinity()));
+					std::map<double, double>::iterator tmp_insert_it=tmp_insert.first;
 					if (!tmp_insert.second)
 					{
-						(tmp_insert_it)->second=numeric_limits<double>::infinity();
+						(tmp_insert_it)->second=std::numeric_limits<double>::infinity();
 					}
 
 					++tmp_insert_it;
@@ -687,19 +687,19 @@ bool done=false;
 					}
 					if (Breakpoints_.size()==1)
 					{
-						FirstSlopeVal_=numeric_limits<double>::infinity();
+						FirstSlopeVal_=std::numeric_limits<double>::infinity();
 					}
 				}
 			}else
 			{
-				if (rightBreak!=numeric_limits<double>::infinity() && Breakpoints_.rbegin()->first>rightBreak )
+				if (rightBreak!=std::numeric_limits<double>::infinity() && Breakpoints_.rbegin()->first>rightBreak )
 				{// something has to be cut on the right
 					pair<map<double, double>::iterator,bool> tmp_insert=Breakpoints_.insert(pair<double, double> (rightBreak, numeric_limits<double>::infinity()));
 
 					map<double, double>::iterator tmp_insert_it=tmp_insert.first;
 					if (!tmp_insert.second)
 					{
-						(tmp_insert_it)->second=numeric_limits<double>::infinity();
+						(tmp_insert_it)->second=std::numeric_limits<double>::infinity();
 					}
 
 					++tmp_insert_it;
@@ -710,7 +710,7 @@ bool done=false;
 					if (Breakpoints_.size()==1)
 					{
 						Breakpoints_.begin()->second=0;
-						FirstSlopeVal_=numeric_limits<double>::infinity();
+						FirstSlopeVal_=std::numeric_limits<double>::infinity();
 					}
 				}
 			}
@@ -738,9 +738,9 @@ bool done=false;
     				(Breakpoints_.rbegin()->first<leftBreak && !is_last_infinity() ) ||
     				(Breakpoints_.begin()->first>rightBreak && !is_last_infinity()) )
     		{
-    			if (leftBreak>=rightBreak){Rcout<<"leftBreak>=rightBreak"<<endl;}
-    			Rcout<<"Empty function thrown in Squeeze"<<endl;
-    			Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<endl;
+    			if (leftBreak>=rightBreak){Rcout<<"leftBreak>=rightBreak"<<std::endl;}
+    			Rcout<<"Empty function thrown in Squeeze"<<std::endl;
+    			Rcout << __FUNCTION__ << "("<<leftBreak<< ","<<rightBreak<<")"<<" in "<<std::endl;
     			this->print();
     			throw emptyfunc();
     		}
@@ -993,8 +993,8 @@ bool done=false;
 	// left_val, 	f(x_0),		f(x1),		...,		f(xn-1),
 	// x0,			x1-x0,		x2-x1,		...,		xn-xn-1,
     //	returns f(xn)
-    	map<double,double>::iterator itbegin = Breakpoints_.begin();
-    	map<double,double>::iterator itend = Breakpoints_.end();
+    	std::map<double,double>::iterator itbegin = Breakpoints_.begin();
+    	std::map<double,double>::iterator itend = Breakpoints_.end();
     	std::map<double, double>::iterator i=itbegin;
     	assert(left_val< itbegin->first);
 
@@ -1023,7 +1023,7 @@ bool done=false;
     }
 
 
-  inline void shift_Breakpoint( map<double,double>::iterator it,double shift)
+  inline void shift_Breakpoint( std::map<double,double>::iterator it,double shift)
   {
 	  // about changing the key of an element in a map
 	  // http://stackoverflow.com/questions/5743545/what-is-the-fastest-way-to-change-a-key-of-an-element-inside-stdmap
@@ -1031,7 +1031,7 @@ bool done=false;
     Breakpoints_.erase(it);
   }
 
- inline void shift_Breakpoint( map<double,double>::reverse_iterator it,double shift)
+ inline void shift_Breakpoint( std::map<double,double>::reverse_iterator it,double shift)
   {
     double first=it->first;
     double second=it->second;

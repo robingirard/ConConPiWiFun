@@ -24,6 +24,20 @@ Robin Girard
 }
 \examples{
 
+
+#### function OptimPriceStorage solves 
+#           	min_x sum_i=1^n Y_i x_i
+#                   Pmoins_i<=	x_i				<=Pplus_i 		i=1,...,n
+#					Cmoins_i<=	sum_j=1^i x_j	<=Cplus_i 	i=1,...,n
+
+n=10000; Y=runif(n,0,10);  B0=array(-Inf,n);
+Pmoins=array(-1,n);Pplus=array(1,n);Cmoins=array(0,n);Cplus=array(5,n);
+res=OptimPriceStorage(Y,Pmoins,Pplus,Cmoins,Cplus)
+
+####
+# construction of a vector of 
+# continuous convex piecewise linear functions
+
 CCPWLfuncList=new(cplfunctionvec) 
 CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0),0))
 CCPWLfuncList$push_back(new(cplfunction,c(-1,1) ,c(-Inf,0),0))
@@ -42,9 +56,10 @@ CCPWLfuncList$SerialPush_2Breaks_Functions(S1,S2,B0,B1);
 #         		min_x sum_i=1^n C_i(x_i)
 #                   Pmoins_i<=	x_i				<=Pplus_i 		i=1,...,n
 #					Cmoins_i<=	sum_j=1^i x_j	<=Cplus_i 	i=1,...,n
-n=10000; Y=runif(n,0,10);  B0=array(-Inf,n);
+
 Pmoins=array(-1,n);Pplus=array(1,n);Cmoins=array(0,n);Cplus=array(5,n);
-res=OptimPriceStorage(Y,Pmoins,Pplus,Cmoins,Cplus)
+res=CCPWLfuncList$OptimMargInt(Pmoins,Pplus,Cmoins,Cplus)
+
 par(mfrow=c(1,2))
 plot(Y,type='l',ylim=range(res$xEtoile))
 lines(y=Pmoins,x=1:n,col='blue'); lines(y=Pplus,x=1:n,col='blue');

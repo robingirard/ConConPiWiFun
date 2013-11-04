@@ -202,7 +202,7 @@ Rcpp::List OptimPriceStorage(NumericVector Prices,NumericVector Pmoins,NumericVe
 	}
 	return Rcpp::List::create(
 			Rcpp::Named("xEtoile") = Rcpp::wrap(xEtoile));
-	};
+	}
 
 double evalf_(NumericVector BreakPoints, NumericVector Prices,double x)
 {
@@ -244,7 +244,7 @@ Rcpp::NumericVector SerialOptimPriceStorage(NumericMatrix Prices,NumericMatrix B
 		}
 	  }
 	return benefit;
-};
+}
 
 
 #endif /* CPLFUNCTIONVEC_HPP_ */

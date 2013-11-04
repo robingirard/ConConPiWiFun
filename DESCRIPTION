@@ -1,7 +1,7 @@
 Package: ConConPiWiFun
 Type: Package
 Title: This package contains an implementation of continuous convex piecewise (linear and quadratic) functions
-Version: 0.4.1
+Version: 0.4.2
 Date: 2013-06-05
 Author: Robin Girard
 Maintainer: Robin Girard <robin.girard@mines-paristech.fr>
